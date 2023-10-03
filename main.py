@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import csv
+import json
 
 def extract_all_mp4_hd_urls(game_url):
     """
@@ -43,23 +43,20 @@ def main():
         for line in f:
             game_urls.append(line.strip())
     
-    # CSV output
-    with open("games.csv", "w", newline='') as csvfile:
-        fieldnames = ['game name', 'game url', 'game mp4 video url']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
+    games_data = {}
         
-        for game_url in game_urls:
-            game_name = game_url.split("/")[-2] # Just an example to extract game name from URL, might need adjustments
-            mp4_hd_urls = extract_all_mp4_hd_urls(game_url)
-            
-
-            if mp4_hd_urls:
-                all_urls = ";".join(mp4_hd_urls)
-                print(f"Found mp4 for game: {game_name}")
-                writer.writerow({'game name': game_name, 'game url': game_url, 'game mp4 video url': all_urls})
-            else:
-                print(f"Could not find mp4 for game: {game_name}")
+    for game_url in game_urls:
+        game_name = game_url.split("/")[-2] # Just an example to extract game name from URL, might need adjustments
+        mp4_hd_urls = extract_all_mp4_hd_urls(game_url)
+        
+        if mp4_hd_urls:
+            games_data[game_name] = mp4_hd_urls
+            print(f"Found mp4 for game: {game_name}")
+        else:
+            print(f"Could not find mp4 for game: {game_name}")
+    
+    with open("games.json", "w") as jsonfile:
+        json.dump(games_data, jsonfile, indent=4)
 
 if __name__ == "__main__":
     main()
