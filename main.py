@@ -50,7 +50,7 @@ def main():
         mp4_hd_urls = extract_all_mp4_hd_urls(game_url)
         
         if mp4_hd_urls:
-            games_data[game_name] = mp4_hd_urls
+            games_data[game_name] = mp4_hd_urls[0]
             print(f"Found mp4 for game: {game_name}")
         else:
             print(f"Could not find mp4 for game: {game_name}")
